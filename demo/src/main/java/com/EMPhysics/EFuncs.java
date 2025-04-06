@@ -11,4 +11,11 @@ public class EFuncs {
         double electricFieldMagnitude = (particle1.getCharge() * particle2.getCharge() * PhysicsConstants.COULOMB_CONSTANT) / (distance * distance); 
         return electricFieldMagnitude;
     } 
+
+    public static double calculateElectricPotential(Vector2D point, ChargedParticle particle) {
+        // particle's charge is the one creating the potential at point's position
+        double distance = point.distanceTo(particle.getPosition()); 
+        if (distance < 0.0001) return 0;
+        return (particle.getCharge() * PhysicsConstants.COULOMB_CONSTANT) / distance;
+    }
 }

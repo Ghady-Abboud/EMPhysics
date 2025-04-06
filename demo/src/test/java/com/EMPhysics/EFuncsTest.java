@@ -17,10 +17,17 @@ public class EFuncsTest {
     }
 
    @Test
-    public void calculate_electric_field_test() {
+    public void test_calculate_electric_field() {
         double electricFieldMagnitude = EFuncs.calculateElectricField(movingParticle, fixedParticle);
 
         assertEquals(8.99e-3,electricFieldMagnitude,1e-5);
 
     } 
+
+    @Test
+    public void test_calculate_electric_potential() {
+        double electricPotential = EFuncs.calculateElectricPotential(new Vector2D(0,0), fixedParticle);
+
+        assertEquals(0.008988e6, electricPotential,1);
+    }
 }

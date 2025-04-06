@@ -19,6 +19,7 @@ public class ChargedParticleTest {
     public void test_charged_particle_default_constructor(){
         movingParticle.getPosition().equals(new Vector2D(1, 2));
         movingParticle.getPosition().equals(new Vector2D(5, 6));
+
         assertEquals(10, movingParticle.getMass());
         assertEquals(1, movingParticle.getCharge());
         assertFalse(movingParticle.getFixed());
@@ -27,7 +28,7 @@ public class ChargedParticleTest {
     @Test
     public void test_charged_particle_alternative_constructor(){
         fixedParticle = new ChargedParticle(new Vector2D(1, 2), 10, 1, false);
-        
+
         fixedParticle.getPosition().equals(new Vector2D(1, 2));
         fixedParticle.getVelocity().equals(new Vector2D(0, 0));
         assertEquals(10, fixedParticle.getMass());
