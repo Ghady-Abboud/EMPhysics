@@ -30,18 +30,18 @@ public class Vector2D {
     public Vector2D scalar_multiply(double scalar){
         return new Vector2D(this.getX() * scalar, this.getY()*scalar);
     }
+    public Vector2D normalize() {
+        double magnitude = this.magnitude();
+        if (magnitude == 0) {
+            throw new ArithmeticException("Cannot normalize a zero vector");
+        }
+        return new Vector2D(this.getX() / magnitude, this.getY() / magnitude);
+    }
     public double magnitude (){
         return Math.sqrt(Math.pow(this.getX(), 2) + Math.pow(this.getY(), 2));
     }
     public double dot_product(Vector2D other) {
         return this.getX() * other.getX() + this.getY() * other.getY();
-    }
-    public Vector2D normalize() {
-        double magnitude = magnitude();
-        if (magnitude == 0) {
-            throw new ArithmeticException("Cannot normalize a zero vector");
-        }
-        return new Vector2D(this.getX() / magnitude, this.getY() / magnitude);
     }
     public double distanceTo(Vector2D other) {
         double dx = this.getX() - other.getX();
