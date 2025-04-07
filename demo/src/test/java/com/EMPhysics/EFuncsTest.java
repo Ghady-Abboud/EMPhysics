@@ -30,4 +30,5 @@ public class EFuncsTest {
 
         assertEquals(0.008988e6, electricPotential,1);
     }
+
 }

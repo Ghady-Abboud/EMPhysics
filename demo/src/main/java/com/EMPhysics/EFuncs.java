@@ -18,4 +18,5 @@ public class EFuncs {
         if (distance < 0.0001) return 0;
         return (particle.getCharge() * PhysicsConstants.COULOMB_CONSTANT) / distance;
     }
+
 }

@@ -3,7 +3,7 @@
 - [X] Electric charge representation
 - [X] Coulomb's law implementation
 - [X] Electric field calculation
-- [ ] Electric potential calculation
+- [X] Electric potential calculation
 - [ ] Field visualization algorithms
 
 ## SIMULATION ENGINE
