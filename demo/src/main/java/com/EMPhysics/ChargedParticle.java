@@ -1,5 +1,6 @@
 package com.EMPhysics;
 
+
 public class ChargedParticle {
     private Vector2D position;
     private Vector2D velocity;

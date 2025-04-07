@@ -39,7 +39,7 @@ public class SimulationSpace {
             for (ChargedParticle p2 : particles) {
                 if (p1 == p2) continue; // Skip self
                 
-                netForce = netForce.add(calculateForce(p1, p2));
+                netForce = netForce.add(calculateNetForce(p1, p2));
             }
             
             // F = ma, so a = F/m
@@ -59,7 +59,7 @@ public class SimulationSpace {
                 }
         }
     }
-    private Vector2D calculateForce(ChargedParticle p1, ChargedParticle p2) {
+    private Vector2D calculateNetForce(ChargedParticle p1, ChargedParticle p2) {
         Vector2D direction = p2.getPosition().subtract(p1.getPosition());
         double distance = direction.magnitude();
         
