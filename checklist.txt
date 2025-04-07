@@ -64,7 +64,8 @@
 
 
 
-CHANGE calculateElectricField to calculateCoulombForce and adjust other calculations( current implementation calculates the force and not the electric field)
+1) CHANGE calculateElectricField to calculateCoulombForce and adjust other calculations( current implementation calculates the force and not the electric field)
+2) Add Constant for the distance being less than whatever value is there
 
 For electric field, the formula should be:
 
