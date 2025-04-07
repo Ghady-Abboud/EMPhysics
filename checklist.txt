@@ -60,3 +60,15 @@
 - [ ] UI testing
 - [ ] Performance benchmarking
 - [ ] Cross-browser compatibility
+
+
+
+
+CHANGE calculateElectricField to calculateCoulombForce and adjust other calculations( current implementation calculates the force and not the electric field)
+
+For electric field, the formula should be:
+
+E = k * Q / r²
+For Coulomb's force, the formula is:
+
+F = k * q1 * q2 / r²
