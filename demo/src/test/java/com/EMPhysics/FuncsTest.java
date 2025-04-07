@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 
 
-public class EFuncsTest {
+public class FuncsTest {
 
     ChargedParticle particle1;
     ChargedParticle particle2;
@@ -18,7 +18,7 @@ public class EFuncsTest {
 
    @Test
     public void test_coulomb_law() {
-        double electricFieldMagnitude = EFuncs.coulombLaw(particle1,particle2);
+        double electricFieldMagnitude = Funcs.coulombLaw(particle1,particle2);
 
         assertEquals(8.99e-3,electricFieldMagnitude,1e-5);
 
@@ -26,7 +26,7 @@ public class EFuncsTest {
 
     @Test
     public void test_calculate_electric_potential() {
-        double electricPotential = EFuncs.calculateElectricPotential(new Vector2D(1,0), particle1);
+        double electricPotential = Funcs.calculateElectricPotential(new Vector2D(1,0), particle1);
 
         assertEquals(0.008988e6, electricPotential,1);
     }

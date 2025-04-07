@@ -64,12 +64,12 @@ public class SimulationSpace {
         double distance = direction.magnitude();
         
         // Prevent extreme forces at very small distances
-        if (distance < 0.01) {
+        if (distance < PhysicsConstants.DISTANCE_DELTA * 100) {
             distance = 0.01;
         }
         
         // Coulomb's law: F = k * q1 * q2 / r²
-        double forceMagnitude = EFuncs.coulombLaw(p1, p2);
+        double forceMagnitude = Funcs.coulombLaw(p1, p2);
         return direction.normalize().scalar_multiply(forceMagnitude);
     }
     

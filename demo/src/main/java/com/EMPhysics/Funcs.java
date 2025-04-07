@@ -1,6 +1,6 @@
 package com.EMPhysics;
 
-public class EFuncs {
+public class Funcs {
 
    public static double coulombLaw(ChargedParticle particle1, ChargedParticle particle2) {
         Vector2D direction = particle2.getPosition().subtract(particle1.getPosition());

@@ -63,13 +63,6 @@
 
 
 
-
-1) CHANGE calculateElectricField to calculateCoulombForce and adjust other calculations( current implementation calculates the force and not the electric field)
-2) Add Constant for the distance being less than whatever value is there
-
-For electric field, the formula should be:
-
-E = k * Q / r²
-For Coulomb's force, the formula is:
-
-F = k * q1 * q2 / r²
+Magnetic Fields: B = μ₀/4π * qv×r̂/r²
+Lorentz Force: F = q(E + v×B)
+Electromagnetic Waves (time-dependent fields)
