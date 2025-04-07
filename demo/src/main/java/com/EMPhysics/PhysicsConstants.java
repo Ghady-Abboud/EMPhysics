@@ -9,4 +9,5 @@ public class PhysicsConstants {
 
     public static final double PROTON_CHARGE = 1.602176634e-19; // C
     
+    public static final double DISTANCE_DELTA = 0.0001; // m
 }

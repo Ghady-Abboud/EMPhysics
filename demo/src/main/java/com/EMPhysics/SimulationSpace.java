@@ -32,7 +32,6 @@ public class SimulationSpace {
     public void update() {
         // First calculate forces between all particles
         for (ChargedParticle p1 : particles) {
-            if (p1.getFixed()) continue; // Skip fixed particles
             
             // Calculate net force on this particle from all others
             Vector2D netForce = new Vector2D(0, 0);
@@ -52,14 +51,12 @@ public class SimulationSpace {
         
         // Then update positions based on new velocities
         for (ChargedParticle p : particles) {
-            if (!p.getFixed()) {
                 p.updatePosition(timeStep);
                 
                 // Apply boundary conditions if enabled
                 if (boundariesEnabled) {
                     enforceBoundaries(p);
                 }
-            }
         }
     }
     private Vector2D calculateForce(ChargedParticle p1, ChargedParticle p2) {
@@ -72,7 +69,7 @@ public class SimulationSpace {
         }
         
         // Coulomb's law: F = k * q1 * q2 / r²
-        double forceMagnitude = EFuncs.calculateElectricField(p1, p2);
+        double forceMagnitude = EFuncs.coulombLaw(p1, p2);
         return direction.normalize().scalar_multiply(forceMagnitude);
     }
     

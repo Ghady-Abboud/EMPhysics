@@ -7,18 +7,18 @@ import org.junit.jupiter.api.BeforeEach;
 
 public class EFuncsTest {
 
-    ChargedParticle movingParticle;
-    ChargedParticle fixedParticle;
+    ChargedParticle particle1;
+    ChargedParticle particle2;
 
     @BeforeEach
     public void setUp() {
-        movingParticle = new ChargedParticle(new Vector2D(0, 0), new Vector2D(5, 6), 10, 1.0e-6);
-        fixedParticle = new ChargedParticle(new Vector2D(1, 0), 10, 1.0e-6, true);
+        particle1 = new ChargedParticle(new Vector2D(0, 0), new Vector2D(5, 6), 10, 1.0e-6);
+        particle2 = new ChargedParticle(new Vector2D(1, 0), new Vector2D(5, 6), 10, 1.0e-6);
     }
 
    @Test
-    public void test_calculate_electric_field() {
-        double electricFieldMagnitude = EFuncs.calculateElectricField(movingParticle, fixedParticle);
+    public void test_coulomb_law() {
+        double electricFieldMagnitude = EFuncs.coulombLaw(particle1,particle2);
 
         assertEquals(8.99e-3,electricFieldMagnitude,1e-5);
 
@@ -26,7 +26,7 @@ public class EFuncsTest {
 
     @Test
     public void test_calculate_electric_potential() {
-        double electricPotential = EFuncs.calculateElectricPotential(new Vector2D(0,0), fixedParticle);
+        double electricPotential = EFuncs.calculateElectricPotential(new Vector2D(1,0), particle1);
 
         assertEquals(0.008988e6, electricPotential,1);
     }
