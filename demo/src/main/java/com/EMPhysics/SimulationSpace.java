@@ -19,8 +19,9 @@ public class SimulationSpace {
     }
 
     public List<ChargedParticle> getParticles() {
-        return particles;
+        return new ArrayList<>(particles); // Return a copy to prevent external modification
     }
+    
     public void addParticle(ChargedParticle particle) {
         particles.add(particle);
     }
@@ -28,10 +29,19 @@ public class SimulationSpace {
     public void removeParticle(ChargedParticle particle) {
         particles.remove(particle);
     }
+    
+    public void setBoundariesEnabled(boolean enabled) {
+        this.boundariesEnabled = enabled;
+    }
+    
+    public boolean getBoundariesEnabled() {
+        return boundariesEnabled;
+    }
 
     public void update() {
-        // First calculate forces between all particles
+        // First calculate forces and update velocities for all particles
         for (ChargedParticle p1 : particles) {
+            if (p1.getFixed()) continue; // Skip fixed particles
             
             // Calculate net force on this particle from all others
             Vector2D netForce = new Vector2D(0, 0);
@@ -39,7 +49,7 @@ public class SimulationSpace {
             for (ChargedParticle p2 : particles) {
                 if (p1 == p2) continue; // Skip self
                 
-                netForce = netForce.add(calculateNetForce(p1, p2));
+                netForce = netForce.add(calculateForce(p1, p2));
             }
             
             // F = ma, so a = F/m
@@ -51,25 +61,30 @@ public class SimulationSpace {
         
         // Then update positions based on new velocities
         for (ChargedParticle p : particles) {
-                p.updatePosition(timeStep);
-                
-                // Apply boundary conditions if enabled
-                if (boundariesEnabled) {
-                    enforceBoundaries(p);
-                }
+            if (p.getFixed()) continue; // Skip fixed particles
+            
+            p.updatePosition(timeStep);
+            
+            // Apply boundary conditions if enabled
+            if (boundariesEnabled) {
+                enforceBoundaries(p);
+            }
         }
     }
-    private Vector2D calculateNetForce(ChargedParticle p1, ChargedParticle p2) {
+    
+    private Vector2D calculateForce(ChargedParticle p1, ChargedParticle p2) {
         Vector2D direction = p2.getPosition().subtract(p1.getPosition());
         double distance = direction.magnitude();
         
         // Prevent extreme forces at very small distances
         if (distance < PhysicsConstants.DISTANCE_DELTA * 100) {
-            distance = 0.01;
+            distance = PhysicsConstants.DISTANCE_DELTA * 100;
         }
         
         // Coulomb's law: F = k * q1 * q2 / r²
-        double forceMagnitude = Funcs.coulombLaw(p1, p2);
+        double forceMagnitude = (PhysicsConstants.COULOMB_CONSTANT * p1.getCharge() * p2.getCharge()) / 
+                               (distance * distance);
+        
         return direction.normalize().scalar_multiply(forceMagnitude);
     }
     

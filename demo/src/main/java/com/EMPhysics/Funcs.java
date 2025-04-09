@@ -35,7 +35,8 @@ public class Funcs {
         return (particle.getCharge() * PhysicsConstants.COULOMB_CONSTANT) / (distance * distance);
     }
 
-    public static Vector2D calculateNetElectricField(Vector2D point, List<ChargedParticle> particles) {
+    public static Vector2D calculateNetElectricField(Vector2D point,
+            List<ChargedParticle> particles) {
         Vector2D netElectricField = new Vector2D(0, 0);
         for (ChargedParticle p : particles) {
             Vector2D direction = point.subtract(p.getPosition());
@@ -44,7 +45,8 @@ public class Funcs {
             if (distance < PhysicsConstants.DISTANCE_DELTA)
                 continue;
 
-            double fieldMagnitude = (Math.abs(p.getCharge()) * PhysicsConstants.COULOMB_CONSTANT)
+            double fieldMagnitude = (Math.abs(p.getCharge()) *
+                    PhysicsConstants.COULOMB_CONSTANT)
                     / (distance * distance);
 
             Vector2D fieldVector = direction.normalize().scalar_multiply(fieldMagnitude);
