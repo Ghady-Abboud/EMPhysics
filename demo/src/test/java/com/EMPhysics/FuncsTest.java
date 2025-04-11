@@ -21,8 +21,8 @@ public class FuncsTest {
     public void setUp() {
         particles = new ArrayList<>();
         positiveCharge = new ChargedParticle(new Vector2D(0, 0), new Vector2D(0, 0), 10, 1.0e-6);
-        negativeCharge = new ChargedParticle(new Vector2D(2, 0), new Vector2D(0, 0), 10, -1.0e-6);
         secondPositiveCharge = new ChargedParticle(new Vector2D(0, 2), new Vector2D(0, 0), 10, 1.0e-6);
+        negativeCharge = new ChargedParticle(new Vector2D(2, 0), new Vector2D(0, 0), 10, -1.0e-6);
     }
 
     @Test
@@ -49,8 +49,8 @@ public class FuncsTest {
     @Test
     public void test_calculate_electric_field_single_point() {
         particles.add(positiveCharge);
-        double electricFieldMagnitude = Funcs.calculateNetElectricField(new Vector2D(1, 0), particles).magnitude();
-        assertEquals(PhysicsConstants.COULOMB_CONSTANT * 1.0e-6, electricFieldMagnitude, 10);
+        Vector2D field = Funcs.calculateNetElectricField(new Vector2D(1, 0), particles);
+        assertEquals(PhysicsConstants.COULOMB_CONSTANT * 1.0e-6, field.magnitude(), 10);
     }
 
 }
