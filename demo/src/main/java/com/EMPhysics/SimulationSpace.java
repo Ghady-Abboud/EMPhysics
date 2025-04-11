@@ -41,7 +41,6 @@ public class SimulationSpace {
     public void update() {
         // First calculate forces and update velocities for all particles
         for (ChargedParticle p1 : particles) {
-            if (p1.getFixed()) continue; // Skip fixed particles
             
             // Calculate net force on this particle from all others
             Vector2D netForce = new Vector2D(0, 0);
@@ -61,7 +60,6 @@ public class SimulationSpace {
         
         // Then update positions based on new velocities
         for (ChargedParticle p : particles) {
-            if (p.getFixed()) continue; // Skip fixed particles
             
             p.updatePosition(timeStep);
             

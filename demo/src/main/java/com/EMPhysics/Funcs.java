@@ -16,23 +16,12 @@ public class Funcs {
         return electricFieldMagnitude;
     }
 
-    // Electric potential is the potential energy per unit charge at a point
     public static double calculateElectricPotential(Vector2D point, ChargedParticle particle) {
         // particle's charge is the one creating the potential at point's position
         double distance = point.distanceTo(particle.getPosition());
         if (distance < PhysicsConstants.DISTANCE_DELTA)
             return 0;
         return (particle.getCharge() * PhysicsConstants.COULOMB_CONSTANT) / distance;
-    }
-
-    // Electric field is a vector field around a charged particles that exerts a
-    // force on other charged particles
-    public static double calculateElectricFieldSinglePoint(Vector2D point, ChargedParticle particle) {
-        Vector2D direction = point.subtract(particle.getPosition());
-        double distance = direction.magnitude();
-        if (distance < PhysicsConstants.DISTANCE_DELTA)
-            return 0;
-        return (particle.getCharge() * PhysicsConstants.COULOMB_CONSTANT) / (distance * distance);
     }
 
     public static Vector2D calculateNetElectricField(Vector2D point,
