@@ -16,6 +16,24 @@ public class Funcs {
         return electricFieldMagnitude;
     }
 
+    // Calculating the force but with a vector
+    public static Vector2D calculateNetElectricForce(ChargedParticle target, List<ChargedParticle> others) {
+        Vector2D netForce = new Vector2D(0,0);
+        for (ChargedParticle other: others) {
+            if (other == target) continue; 
+
+            Vector2D direction = other.getPosition().subtract(target.getPosition());
+            double distance = direction.magnitude();
+            if (distance < PhysicsConstants.DISTANCE_DELTA) continue;
+
+            double forceMagnitude = (target.getCharge() * other.getCharge() * PhysicsConstants.COULOMB_CONSTANT) / (distance * distance);
+
+            Vector2D forceVector = direction.normalize().scalar_multiply(forceMagnitude);
+            netForce = netForce.add(forceVector);
+        }
+        return netForce;
+    }
+
     public static double calculateElectricPotential(Vector2D point, ChargedParticle particle) {
         // particle's charge is the one creating the potential at point's position
         double distance = point.distanceTo(particle.getPosition());

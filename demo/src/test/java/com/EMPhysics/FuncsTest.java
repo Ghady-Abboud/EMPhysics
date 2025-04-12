@@ -15,8 +15,8 @@ public class FuncsTest {
     ChargedParticle negativeCharge;
     ChargedParticle secondPositiveCharge;
 
-
     List<ChargedParticle> particles;
+
     @BeforeEach
     public void setUp() {
         particles = new ArrayList<>();
@@ -33,6 +33,17 @@ public class FuncsTest {
     }
 
     @Test
+    public void test_calculate_net_electric_force() {
+        particles.add(positiveCharge);
+        particles.add(negativeCharge);
+        Vector2D netForce = Funcs.calculateNetElectricForce(positiveCharge, particles);
+        assertEquals(
+                (positiveCharge.getCharge() * negativeCharge.getCharge() * PhysicsConstants.COULOMB_CONSTANT) / Math
+                        .pow((negativeCharge.getPosition().subtract(positiveCharge.getPosition())).magnitude(), 2),
+                netForce.getX(), 1e-10);
+    }
+
+    @Test
     public void test_calculate_electric_potential() {
         double electricPotential = Funcs.calculateElectricPotential(new Vector2D(1, 0), positiveCharge);
         assertEquals(8.99e3, electricPotential, 10);
@@ -41,7 +52,7 @@ public class FuncsTest {
     @Test
     public void test_net_electric_field_list_is_empty() {
         Vector2D field = Funcs.calculateNetElectricField(new Vector2D(5, 5), particles);
-        
+
         assertEquals(0, field.getX(), 1e-10);
         assertEquals(0, field.getY(), 1e-10);
     }
