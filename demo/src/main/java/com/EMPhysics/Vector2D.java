@@ -28,7 +28,7 @@ public class Vector2D {
         return new Vector2D(this.getX() - other.getX(), this.getY() - other.getY());
     }
     public Vector2D scalar_multiply(double scalar){
-        return new Vector2D(this.getX() * scalar, this.getY()*scalar);
+        return new Vector2D(this.getX() * scalar, this.getY() * scalar);
     }
     public Vector2D normalize() {
         double magnitude = this.magnitude();
