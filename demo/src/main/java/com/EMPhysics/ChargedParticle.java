@@ -45,7 +45,6 @@ public class ChargedParticle {
     }
     
     public void updateVelocity(Vector2D acceleration, double deltaTime) {
-        
         // v = v + a*t (not a + v*t as in the original)
         setVelocity(velocity.add(acceleration.scalar_multiply(deltaTime)));
     }

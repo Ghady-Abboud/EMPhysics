@@ -8,9 +8,8 @@ public class Funcs {
     public static double coulombLaw(ChargedParticle particle1, ChargedParticle particle2) {
         Vector2D direction = particle2.getPosition().subtract(particle1.getPosition());
         double distance = direction.magnitude();
-        if (distance < PhysicsConstants.DISTANCE_DELTA) {
+        if (!checkDistanceValid(distance))
             return 0;
-        }
         double electricFieldMagnitude = (particle1.getCharge() * particle2.getCharge()
                 * PhysicsConstants.COULOMB_CONSTANT) / (distance * distance);
         return electricFieldMagnitude;
@@ -18,15 +17,18 @@ public class Funcs {
 
     // Calculating the force but with a vector
     public static Vector2D calculateNetElectricForce(ChargedParticle target, List<ChargedParticle> others) {
-        Vector2D netForce = new Vector2D(0,0);
-        for (ChargedParticle other: others) {
-            if (other == target) continue; 
+        Vector2D netForce = new Vector2D(0, 0);
+        for (ChargedParticle other : others) {
+            if (other == target)
+                continue;
 
             Vector2D direction = other.getPosition().subtract(target.getPosition());
             double distance = direction.magnitude();
-            if (distance < PhysicsConstants.DISTANCE_DELTA) continue;
+            if (!checkDistanceValid(distance))
+                continue;
 
-            double forceMagnitude = (target.getCharge() * other.getCharge() * PhysicsConstants.COULOMB_CONSTANT) / (distance * distance);
+            double forceMagnitude = (target.getCharge() * other.getCharge() * PhysicsConstants.COULOMB_CONSTANT)
+                    / (distance * distance);
 
             Vector2D forceVector = direction.normalize().scalar_multiply(forceMagnitude);
             netForce = netForce.add(forceVector);
@@ -37,7 +39,7 @@ public class Funcs {
     public static double calculateElectricPotential(Vector2D point, ChargedParticle particle) {
         // particle's charge is the one creating the potential at point's position
         double distance = point.distanceTo(particle.getPosition());
-        if (distance < PhysicsConstants.DISTANCE_DELTA)
+        if (!checkDistanceValid(distance))
             return 0;
         return (particle.getCharge() * PhysicsConstants.COULOMB_CONSTANT) / distance;
     }
@@ -65,4 +67,10 @@ public class Funcs {
         return netElectricField;
     }
 
+    public static boolean checkDistanceValid(double distance) {
+        if (distance < PhysicsConstants.DISTANCE_DELTA) {
+            return false;
+        }
+        return true;
+    }
 }

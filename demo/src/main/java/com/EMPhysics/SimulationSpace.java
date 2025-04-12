@@ -23,4 +23,17 @@ public class SimulationSpace {
     public void removeCharge(ChargedParticle charge) {
         charges.remove(charge);
     }
+
+    public void update(double deltaTime) {
+        for (ChargedParticle particle: charges) {
+            Vector2D netForce = Funcs.calculateNetElectricForce(particle, charges);
+
+            Vector2D acceleration = netForce.scalar_multiply(1.0 / particle.getMass());
+            particle.updateVelocity(acceleration, deltaTime);
+        }
+        // Update position using new velocity 
+        for (ChargedParticle particle: charges) {
+            particle.updatePosition(deltaTime);
+        }
+    }
 }
