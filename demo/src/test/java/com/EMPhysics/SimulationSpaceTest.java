@@ -53,5 +53,4 @@ public class SimulationSpaceTest {
 
         assertTrue(initialX >= randomCharge.getPosition().getX());
     }
-
 }
