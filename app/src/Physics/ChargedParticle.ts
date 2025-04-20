@@ -6,7 +6,7 @@ export class ChargedParticle {
     private charge: number;
     private mass: number;
 
-    constructor(position: Vector2D, velocity: Vector2D, charge: number, mass: number) {
+    constructor(position: Vector2D, velocity: Vector2D, mass: number, charge: number) {
         this.position = position;
         this.velocity = velocity;
         this.charge = charge;

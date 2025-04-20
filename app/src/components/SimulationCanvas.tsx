@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
 import { SimulationSpace } from "../Physics/SimulationSpace";
+import { Vector2D } from "../Physics/Vector2D";
 
 const sim = new SimulationSpace();
-
 
 export default function SimulationCanvas() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
