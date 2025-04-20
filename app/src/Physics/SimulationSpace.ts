@@ -10,6 +10,10 @@ export class SimulationSpace {
         this.particles.push(this.charge);
     }
 
+    public getParticles(): ChargedParticle[] {
+        return this.particles;
+    }
+
     public addParticle(particle: ChargedParticle): void {
         this.particles.push(particle);
     }

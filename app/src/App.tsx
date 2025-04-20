@@ -1,13 +1,10 @@
-import { Fragment } from 'react/jsx-runtime';
+import SimulationCanvas from "./components/SimulationCanvas";
 
 export function App() {
   return (
-    <Fragment>
-      <main className="MainContainer">
-
-      </main >
-
-    </Fragment>
+    <main className="MainContainer">
+      <SimulationCanvas />
+    </main >
 
   );
 }
