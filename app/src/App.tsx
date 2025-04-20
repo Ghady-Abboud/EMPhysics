@@ -1,10 +1,14 @@
-import './App.css';
+import { Fragment } from 'react/jsx-runtime';
 
 export function App() {
   return (
-    <main className="MainContainer">
+    <Fragment>
+      <main className="MainContainer">
 
-    </main>
+      </main >
+
+    </Fragment>
+
   );
 }
 
