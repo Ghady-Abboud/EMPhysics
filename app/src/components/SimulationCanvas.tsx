@@ -7,6 +7,11 @@ export default function SimulationCanvas() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [running, setRunning] = useState<boolean>(false);
 
+    const [fps, setFps] = useState<number>(0);
+
+    // const frameCountRef = useRef<number>(0);
+    // const lastTimeRef = useRef<number>(0);
+
     useEffect(() => {
 
         const canvas = canvasRef.current!;
@@ -29,11 +34,21 @@ export default function SimulationCanvas() {
 
         let animationId: number | null = null;
         if (running) {
-            const animate = () => {
+            const animate = (/*timstamp:number*/) => {
+
+                /*
+                frameCountRef.current++;
+                if (timestamp - lastTimeRef.current >= 1000) {
+                    setFps(frameCountRef.current);
+                    frameCountRef.current = 0;
+                    lastTimeRef.current = timestamp;
+                }
+                */
                 sim.update(0.016);
                 renderFrame();
                 animationId = requestAnimationFrame(animate);
             }
+            // animate(performance.now());
             animate();
         } else {
             renderFrame();
@@ -51,6 +66,12 @@ export default function SimulationCanvas() {
 
     return (
         <div>
+            {/* 
+            <div style={{ position: "absolute", top: 20, right: 10, background: "rgba(255,255,255,0.7)", padding: 5 }}>
+                <p>FPS: {fps}</p>
+                <p>Particles: {sim.getParticles().length}</p>
+            </div>
+            */}
             <canvas ref={canvasRef} style={{ border: "1px solid black" }} />
             <button onClick={toggleRunning} style={{ position: "absolute", top: 10, right: 10 }}>
                 {running ? "Stop" : "Start"}
