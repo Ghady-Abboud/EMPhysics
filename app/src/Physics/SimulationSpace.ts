@@ -2,7 +2,7 @@ import { ChargedParticle } from "./ChargedParticle";
 import { Vector2D } from "./Vector2D";
 import { calculateNetElectricForce } from "./Funcs";
 
-export class SimnulationSpace {
+export class SimulationSpace {
     private particles: ChargedParticle[] = [];
     private charge: ChargedParticle = new ChargedParticle(new Vector2D(0, 0), new Vector2D(0, 0), 1, 1e-6);
 
