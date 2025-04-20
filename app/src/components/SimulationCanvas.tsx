@@ -7,7 +7,7 @@ const sim = new SimulationSpace();
 export default function SimulationCanvas() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const animationRef = useRef<number | null>(null);
-    const runningRef = useRef<boolean>(false);
+    const [running, setRunning] = useState<boolean>(false);
 
     useEffect(() => {
         const canvas = canvasRef.current!;
@@ -17,10 +17,9 @@ export default function SimulationCanvas() {
         canvas.height = window.innerHeight * 0.99;
 
         const render = () => {
-            if (!runningRef.current) {
+            if (running) {
                 sim.update(0.016); // Assuming 60 FPS so deltaTime is 1/60
             }
-
             ctx?.clearRect(0, 0, canvas.width, canvas.height);
 
             for (const p of sim.getParticles()) {
@@ -32,6 +31,7 @@ export default function SimulationCanvas() {
                 ctx.fill();
             }
             animationRef.current = requestAnimationFrame(render);
+
         };
         render();
         return () => {
@@ -39,17 +39,17 @@ export default function SimulationCanvas() {
                 cancelAnimationFrame(animationRef.current);
             }
         }
-    }, []);
+    }, [running]);
 
     const toggleRunning = () => {
-        runningRef.current = !runningRef.current;
+        setRunning((prev) => !prev);
     }
 
     return (
         <div>
             <canvas ref={canvasRef} style={{ border: "1px solid black" }} />
             <button onClick={toggleRunning} style={{ position: "absolute", top: 10, right: 10 }}>
-                {runningRef.current ? "Stop" : "Start"}
+                {running ? "Stop" : "Start"}
             </button>
         </div>
     )
