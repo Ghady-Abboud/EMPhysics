@@ -5,7 +5,6 @@ import { calculateNetElectricForce } from "./Funcs";
 export class SimulationSpace {
     private particles: ChargedParticle[] = [];
     private charge: ChargedParticle = new ChargedParticle(new Vector2D(0, 0), new Vector2D(0, 0), 1, 1e-6);
-
     constructor() {
         this.particles.push(this.charge);
     }
