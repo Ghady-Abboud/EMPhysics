@@ -46,7 +46,7 @@ export default function SimulationCanvas() {
                 {running ? "Stop" : "Start"}
             </button>
             <button onClick={() => {
-                sim.addParticle(new ChargedParticle(new Vector2D(Math.random(), Math.random()), new Vector2D(Math.random(), Math.random()), Math.random(), Math.random() * 2 - 1));
+                sim.addParticle(new ChargedParticle(new Vector2D(10, 0), new Vector2D(7, 4), 1, 10e-6));
             }} style={{ position: "absolute", top: 50, right: 10 }}>
                 Add Particle
             </button>

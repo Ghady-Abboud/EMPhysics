@@ -12,16 +12,12 @@ type Boundaries = {
 };
 export class SimulationSpace {
     private particles: ChargedParticle[] = [];
-    private charge: ChargedParticle = new ChargedParticle(new Vector2D(0, 0), new Vector2D(0, 0), 1, 1e-6);
     private boundaries: Boundaries = {
         left: undefined,
         right: undefined,
         top: undefined,
         bottom: undefined,
         elasticity: undefined,
-    }
-    constructor() {
-        this.particles.push(this.charge);
     }
 
     public getParticles(): ChargedParticle[] {
