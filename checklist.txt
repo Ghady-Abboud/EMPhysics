@@ -7,24 +7,23 @@
 - [ ] Field visualization algorithms
 
 ## SIMULATION ENGINE
-- [ ] Simulation space class
-- [ ] Time stepping mechanism
-- [ ] Force calculation system
+- [I] Simulation space class
+- [X] Time stepping mechanism
+- [X] Force calculation system
 - [X] Position/velocity updates
-- [ ] Boundary conditions
+- [X] Boundary conditions
 
 ## BACKEND INFRASTRUCTURE
-- [ ] Simulation manager class
+- [X] Simulation manager class
 - [ ] Configuration system
 - [ ] Data persistence
 - [ ] REST API endpoints
 - [ ] Real-time updates mechanism
 
 ## FRONTEND BASICS
-- [ ] Canvas setup for visualization
-- [ ] Basic UI components
-- [ ] API communication
-- [ ] Simple charge rendering
+- [X] Canvas setup for visualization
+- [X] Basic UI components
+- [X] Simple charge rendering
 
 ## INTERACTIVE FEATURES
 - [ ] Charge placement
@@ -37,7 +36,7 @@
 - [ ] Electric field arrows/heatmap
 - [ ] Field lines visualization
 - [ ] Equipotential lines
-- [ ] Color coding by field strength
+- [X] Color coding by field strength
 - [ ] Animation of field changes
 
 ## ADVANCED FEATURES
@@ -54,15 +53,9 @@
 - [ ] Physics explanations
 - [ ] Demo examples
 
-## TESTING
-- [X] Unit tests for physics calculations
-- [ ] Integration tests
-- [ ] UI testing
-- [ ] Performance benchmarking
-- [ ] Cross-browser compatibility
 
 
 
-Magnetic Fields: B = μ₀/4π * qv×r̂/r²
-Lorentz Force: F = q(E + v×B)
-Electromagnetic Waves (time-dependent fields)
+Fix bug where first particle doesn't render until start is clicked
+fix calculations and boundaries even more
+make particles bigger and maybe add grid lines
