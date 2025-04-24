@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
 import { SimulationSpace } from "../Physics/SimulationSpace";
 
-export const useSimulation = (running: boolean, canvasRef: React.RefObject<HTMLCanvasElement>, sim: SimulationSpace) => {
+export const useSimulation = (running: boolean, canvasRef: React.RefObject<HTMLCanvasElement>, sim: SimulationSpace, canvasDimensions: any) => {
     useEffect(() => {
 
         const canvas = canvasRef.current!;
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        canvas.width = window.innerWidth * 0.8;
-        canvas.height = window.innerHeight * 0.99;
+        canvas.width = canvasDimensions.width as number;
+        canvas.height = canvasDimensions.height as number;
 
         const renderFrame = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);

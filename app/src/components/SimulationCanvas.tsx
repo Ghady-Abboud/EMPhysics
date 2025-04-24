@@ -15,7 +15,19 @@ export default function SimulationCanvas() {
     // const frameCountRef = useRef<number>(0);
     // const lastTimeRef = useRef<number>(0);
 
-    useSimulation(running, canvasRef, sim);
+    const canvasDimensions = {
+        width: window.innerWidth * 0.8,
+        height: window.innerHeight * 0.99,
+    }
+    sim.setBoundaries({
+        left: -canvasDimensions.width / 2,
+        right: canvasDimensions.width / 2,
+        top: -canvasDimensions.height / 2,
+        bottom: canvasDimensions.height / 2,
+        elasticity: 0.9,
+    });
+
+    useSimulation(running, canvasRef, sim, canvasDimensions);
 
     const toggleRunning = () => {
         setRunning((prev) => !prev);
