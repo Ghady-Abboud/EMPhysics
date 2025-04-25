@@ -52,14 +52,6 @@ export default function SimulationCanvas() {
         setRunning((prev) => !prev);
     }
 
-    const updateParticles = (previousParticles: ChargedParticle[]) => {
-        if (previousParticles === sim.getParticles()) {
-            return;
-        } else {
-            setUpdateCanvas(true);
-        }
-    }
-
     return (
         <div>
             {/* 
