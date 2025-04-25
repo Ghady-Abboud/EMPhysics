@@ -6,9 +6,21 @@ import { Vector2D } from "../Physics/Vector2D";
 
 const sim = new SimulationSpace();
 
+export interface SimulationDeps {
+    running: boolean;
+    canvasRef: React.RefObject<HTMLCanvasElement>;
+    sim: SimulationSpace;
+    canvasDimensions: {
+        width: number;
+        height: number;
+    };
+    updateCanvas: boolean;
+}
+
 export default function SimulationCanvas() {
     const canvasRef = useRef<HTMLCanvasElement>(undefined) as React.RefObject<HTMLCanvasElement>;
     const [running, setRunning] = useState<boolean>(false);
+    const [updateCanvas, setUpdateCanvas] = useState<boolean>(false);
 
     // const [fps, setFps] = useState<number>(0);
 
@@ -27,10 +39,25 @@ export default function SimulationCanvas() {
         elasticity: 0.9,
     });
 
-    useSimulation(running, canvasRef, sim, canvasDimensions);
+    const simulationDeps: SimulationDeps = {
+        running,
+        canvasRef,
+        sim,
+        canvasDimensions,
+        updateCanvas,
+    }
+    useSimulation(simulationDeps);
 
     const toggleRunning = () => {
         setRunning((prev) => !prev);
+    }
+
+    const updateParticles = (previousParticles: ChargedParticle[]) => {
+        if (previousParticles === sim.getParticles()) {
+            return;
+        } else {
+            setUpdateCanvas(true);
+        }
     }
 
     return (
@@ -47,6 +74,8 @@ export default function SimulationCanvas() {
             </button>
             <button onClick={() => {
                 sim.addParticle(new ChargedParticle(new Vector2D(10, 0), new Vector2D(7, 4), 1, 10e-6));
+                console.log("Particle added");
+                setUpdateCanvas(true);
             }} style={{ position: "absolute", top: 50, right: 10 }}>
                 Add Particle
             </button>

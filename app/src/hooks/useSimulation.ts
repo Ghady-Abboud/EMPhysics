@@ -1,19 +1,19 @@
-import React, { useEffect } from "react";
-import { SimulationSpace } from "../Physics/SimulationSpace";
+import { useEffect } from "react";
+import { SimulationDeps } from "../components/SimulationCanvas";
 
-export const useSimulation = (running: boolean, canvasRef: React.RefObject<HTMLCanvasElement>, sim: SimulationSpace, canvasDimensions: any) => {
+export const useSimulation = (/*running: boolean, canvasRef: React.RefObject<HTMLCanvasElement>, sim: SimulationSpace, canvasDimensions: any*/ simulationDeps: SimulationDeps) => {
     useEffect(() => {
 
-        const canvas = canvasRef.current!;
+        const canvas = simulationDeps.canvasRef.current!;
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        canvas.width = canvasDimensions.width as number;
-        canvas.height = canvasDimensions.height as number;
+        canvas.width = simulationDeps.canvasDimensions.width as number;
+        canvas.height = simulationDeps.canvasDimensions.height as number;
 
         const renderFrame = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (const p of sim.getParticles()) {
+            for (const p of simulationDeps.sim.getParticles()) {
                 const pos = p.getPosition();
                 ctx.beginPath();
                 ctx.arc(pos.getX() + canvas.width / 2, pos.getY() + canvas.height / 2, 5, 0, Math.PI * 2);
@@ -23,7 +23,7 @@ export const useSimulation = (running: boolean, canvasRef: React.RefObject<HTMLC
         }
 
         let animationId: number | null = null;
-        if (running) {
+        if (simulationDeps.running) {
             const animate = (/*timstamp:number*/) => {
 
                 /*
@@ -34,7 +34,7 @@ export const useSimulation = (running: boolean, canvasRef: React.RefObject<HTMLC
                     lastTimeRef.current = timestamp;
                 }
                 */
-                sim.update(0.016);
+                simulationDeps.sim.update(0.016);
                 renderFrame();
                 animationId = requestAnimationFrame(animate);
             }
@@ -49,5 +49,5 @@ export const useSimulation = (running: boolean, canvasRef: React.RefObject<HTMLC
                 cancelAnimationFrame(animationId);
             }
         }
-    }, [running, canvasRef, sim]);
+    }, [simulationDeps.running, simulationDeps.canvasRef, simulationDeps.sim, simulationDeps.updateCanvas]);
 }
