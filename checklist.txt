@@ -55,7 +55,6 @@
 
 
 
-
-Fix bug where first particle doesn't render until start is clicked
-fix calculations and boundaries even more
-make particles bigger and maybe add grid lines
+Particle doesn't render when we start then stop then add a new particle(we would have to run start for it to run)
+Fix calculations and boundaries even more
+Make particles bigger and maybe add grid lines
