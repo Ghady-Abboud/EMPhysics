@@ -1,63 +1,72 @@
-import { useRef, useState } from "react";
-import { SimulationSpace } from "../Physics/SimulationSpace";
-import { useSimulation } from "../hooks/useSimulation";
+import { useCallback, useRef, useState, useMemo } from "react";
+import { SimulationSpace } from "../Physics/Simulation/SimulationSpace";
+import { useSimulation, SimulationRenderOptions } from "../hooks/useSimulation";
 import { ChargedParticle } from "../Physics/ChargedParticle";
 import { Vector2D } from "../Physics/Vector2D";
-
-const sim = new SimulationSpace();
-
-export interface SimulationDeps {
-    running: boolean;
-    canvasRef: React.RefObject<HTMLCanvasElement | null>;
-    sim: SimulationSpace;
-    canvasDimensions: {
-        width: number;
-        height: number;
-    };
-    updateCanvas: boolean;
-}
+import { SimulationControls } from "./SimulationControls";
+import { SimulationStats } from "./SimulationStats";
+import { Boundaries } from "../Physics/Simulation/BoundaryManager";
 
 export default function SimulationCanvas() {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
+    // Initialize state and refs
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
+    const [simulation] = useState<SimulationSpace>(() => new SimulationSpace());
     const [running, setRunning] = useState<boolean>(false);
-    const [updateCanvas, setUpdateCanvas] = useState<boolean>(false);
+    const [updateTrigger, setUpdateTrigger] = useState<boolean>(false);
     const [showGrid, setShowGrid] = useState<boolean>(true);
     const [showVectors, setShowVectors] = useState<boolean>(true);
     const [particleCount, setParticleCount] = useState<number>(0);
 
-    // Canvas dimensions
-    const canvasDimensions = {
+    // Memoize canvas dimensions to prevent unnecessary recalculations
+    const canvasDimensions = useMemo(() => ({
         width: window.innerWidth * 0.8,
         height: window.innerHeight * 0.8,
-    };
+    }), []);
 
-    // Set simulation boundaries
-    sim.setBoundaries({
+    // Memoize simulation boundaries
+    const simulationBoundaries = useMemo<Boundaries>(() => ({
         left: -canvasDimensions.width / 2,
         right: canvasDimensions.width / 2,
         top: -canvasDimensions.height / 2,
         bottom: canvasDimensions.height / 2,
         elasticity: 0.9,
-    });
+    }), [canvasDimensions.width, canvasDimensions.height]);
 
-    const simulationDeps: SimulationDeps = {
+    // Set boundaries when they change
+    useMemo(() => {
+        simulation.setBoundaries(simulationBoundaries);
+    }, [simulation, simulationBoundaries]);
+
+    // Memoize render options to prevent unnecessary re-renders
+    const renderOptions = useMemo<SimulationRenderOptions>(() => ({
+        showGrid,
+        showVectors
+    }), [showGrid, showVectors]);
+
+    // Hook into simulation rendering
+    useSimulation({
         running,
         canvasRef,
-        sim,
+        simulation,
         canvasDimensions,
-        updateCanvas,
-    };
+        renderOptions,
+        updateTrigger
+    });
 
-    useSimulation(simulationDeps);
-
-    const toggleRunning = () => {
+    // Event handlers using useCallback to prevent unnecessary re-renders
+    const toggleRunning = useCallback(() => {
         setRunning((prev) => !prev);
-    };
+    }, []);
 
-    const addRandomParticle = () => {
-        // Get boundaries for position constraints
-        const bounds = sim.getBoundaries();
+    const toggleGrid = useCallback(() => {
+        setShowGrid((prev) => !prev);
+    }, []);
 
+    const toggleVectors = useCallback(() => {
+        setShowVectors((prev) => !prev);
+    }, []);
+
+    const addRandomParticle = useCallback(() => {
         // Calculate appropriate position within 80% of canvas size
         // to avoid particles too close to the edges
         const posX = (Math.random() * 0.8 - 0.4) * canvasDimensions.width;
@@ -74,7 +83,7 @@ export default function SimulationCanvas() {
         const charge = (Math.random() > 0.5 ? 1 : -1) * (1e-6 + Math.random() * 9e-6);
 
         // Create and add the particle
-        sim.addParticle(
+        simulation.addParticle(
             new ChargedParticle(
                 new Vector2D(posX, posY),
                 new Vector2D(velX, velY),
@@ -84,16 +93,16 @@ export default function SimulationCanvas() {
         );
 
         // Update particle count and trigger re-render
-        setParticleCount(sim.getParticles().length);
-        setUpdateCanvas(!updateCanvas);
-    };
+        setParticleCount(simulation.getParticles().length);
+        setUpdateTrigger(prev => !prev);
+    }, [simulation, canvasDimensions.width, canvasDimensions.height]);
 
-    const clearParticles = () => {
+    const clearParticles = useCallback(() => {
         // Reset the simulation
-        sim.getParticles().forEach(p => sim.removeParticle(p));
+        simulation.getParticles().forEach(p => simulation.removeParticle(p));
         setParticleCount(0);
-        setUpdateCanvas(!updateCanvas);
-    };
+        setUpdateTrigger(prev => !prev);
+    }, [simulation]);
 
     return (
         <div>
@@ -109,97 +118,22 @@ export default function SimulationCanvas() {
             />
 
             {/* Stats panel */}
-            <div style={{
-                position: "absolute",
-                top: 20,
-                right: 20,
-                background: "rgba(255,255,255,0.8)",
-                padding: 10,
-                borderRadius: 5,
-                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-                minWidth: "150px"
-            }}>
-                <p><strong>Particles:</strong> {sim.getParticles().length}</p>
-                <p><strong>Status:</strong> {running ? "Running" : "Paused"}</p>
-            </div>
+            <SimulationStats
+                particleCount={particleCount}
+                isRunning={running}
+            />
 
             {/* Controls panel */}
-            <div style={{
-                position: "absolute",
-                top: 20,
-                left: 20,
-                background: "rgba(255,255,255,0.8)",
-                padding: 10,
-                borderRadius: 5,
-                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "10px"
-            }}>
-                <button
-                    onClick={toggleRunning}
-                    style={{
-                        padding: "8px 12px",
-                        background: running ? "#f44336" : "#4CAF50",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer"
-                    }}
-                >
-                    {running ? "Pause" : "Start"}
-                </button>
-
-                <button
-                    onClick={addRandomParticle}
-                    style={{
-                        padding: "8px 12px",
-                        background: "#2196F3",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer"
-                    }}
-                >
-                    Add Particle
-                </button>
-
-                <button
-                    onClick={clearParticles}
-                    style={{
-                        padding: "8px 12px",
-                        background: "#FF9800",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer"
-                    }}
-                >
-                    Clear All
-                </button>
-
-                <div style={{ marginTop: "10px" }}>
-                    <label style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}>
-                        <input
-                            type="checkbox"
-                            checked={showGrid}
-                            onChange={() => setShowGrid(!showGrid)}
-                            style={{ marginRight: "5px" }}
-                        />
-                        Show Grid
-                    </label>
-
-                    <label style={{ display: "flex", alignItems: "center" }}>
-                        <input
-                            type="checkbox"
-                            checked={showVectors}
-                            onChange={() => setShowVectors(!showVectors)}
-                            style={{ marginRight: "5px" }}
-                        />
-                        Show Vectors
-                    </label>
-                </div>
-            </div>
+            <SimulationControls
+                running={running}
+                onToggleRunning={toggleRunning}
+                onAddParticle={addRandomParticle}
+                onClearParticles={clearParticles}
+                showGrid={showGrid}
+                onToggleGrid={toggleGrid}
+                showVectors={showVectors}
+                onToggleVectors={toggleVectors}
+            />
         </div>
     );
 }

@@ -1,17 +1,47 @@
 import { useEffect } from "react";
-import { SimulationDeps } from "../components/SimulationCanvas";
+import { SimulationSpace } from "../Physics/Simulation/SimulationSpace";
 
-export const useSimulation = (simulationDeps: SimulationDeps) => {
+export interface SimulationRenderOptions {
+    showGrid: boolean;
+    showVectors: boolean;
+}
+
+export interface SimulationViewProps {
+    running: boolean;
+    canvasRef: React.RefObject<HTMLCanvasElement | null>;
+    simulation: SimulationSpace;
+    canvasDimensions: {
+        width: number;
+        height: number;
+    };
+    renderOptions: SimulationRenderOptions;
+    updateTrigger: boolean;
+}
+
+export const useSimulation = (props: SimulationViewProps) => {
+    const {
+        running,
+        canvasRef,
+        simulation,
+        canvasDimensions,
+        renderOptions,
+        updateTrigger
+    } = props;
+
     useEffect(() => {
-        const canvas = simulationDeps.canvasRef.current!;
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        canvas.width = simulationDeps.canvasDimensions.width as number;
-        canvas.height = simulationDeps.canvasDimensions.height as number;
+        canvas.width = canvasDimensions.width;
+        canvas.height = canvasDimensions.height;
 
-        // Draw coordinate grid
+        // Draw coordinate grid if enabled
         const drawGrid = () => {
+            if (!renderOptions.showGrid) return;
+
             const gridSize = 50; // Distance between grid lines
             ctx.strokeStyle = "rgba(200, 200, 200, 0.3)";
             ctx.lineWidth = 1;
@@ -49,41 +79,36 @@ export const useSimulation = (simulationDeps: SimulationDeps) => {
             ctx.stroke();
         };
 
-        const renderFrame = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const renderParticle = (p: any) => {
+            const pos = p.getPosition();
+            const charge = p.getCharge();
+            const mass = p.getMass();
 
-            // Draw grid first (below particles)
-            drawGrid();
+            // Calculate radius based on mass (min 5px)
+            const radius = 5 + mass * 2;
 
-            // Draw particles
-            for (const p of simulationDeps.sim.getParticles()) {
-                const pos = p.getPosition();
-                const charge = p.getCharge();
-                const mass = p.getMass();
+            // Draw particle
+            ctx.beginPath();
+            ctx.arc(
+                pos.getX() + canvas.width / 2,
+                pos.getY() + canvas.height / 2,
+                radius, 0, Math.PI * 2
+            );
 
-                // Calculate radius based on mass (min 5px)
-                const radius = 5 + mass * 2;
+            // Fill based on charge
+            ctx.fillStyle = charge > 0 ? "rgba(255, 50, 50, 0.8)" : "rgba(50, 50, 255, 0.8)";
+            ctx.fill();
 
-                // Draw particle
-                ctx.beginPath();
-                ctx.arc(
-                    pos.getX() + canvas.width / 2,
-                    pos.getY() + canvas.height / 2,
-                    radius, 0, Math.PI * 2
-                );
+            // Add border
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "#333";
+            ctx.stroke();
 
-                // Fill based on charge
-                ctx.fillStyle = charge > 0 ? "rgba(255, 50, 50, 0.8)" : "rgba(50, 50, 255, 0.8)";
-                ctx.fill();
-
-                // Add border
-                ctx.lineWidth = 1;
-                ctx.strokeStyle = "#333";
-                ctx.stroke();
-
-                // Draw velocity vector
+            // Draw velocity vector if enabled
+            if (renderOptions.showVectors) {
                 const vel = p.getVelocity();
                 const velMagnitude = Math.sqrt(vel.getX() ** 2 + vel.getY() ** 2);
+
                 if (velMagnitude > 0) {
                     const scale = 5; // Scale factor for velocity vectors
                     const arrowX = pos.getX() + canvas.width / 2 + vel.getX() * scale;
@@ -116,17 +141,27 @@ export const useSimulation = (simulationDeps: SimulationDeps) => {
             }
         };
 
+        const renderFrame = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawGrid();
+
+            // Draw particles
+            for (const particle of simulation.getParticles()) {
+                renderParticle(particle);
+            }
+        };
+
         let animationId: number | null = null;
 
-        if (simulationDeps.running) {
+        if (running) {
             const animate = () => {
-                simulationDeps.sim.update(0.016);
+                simulation.update(0.016); // ~60fps
                 renderFrame();
                 animationId = requestAnimationFrame(animate);
             };
             animate();
         } else {
-            // This is key - when not running, still render whenever state changes
+            // Even when not running, render the current state
             renderFrame();
         }
 
@@ -136,10 +171,13 @@ export const useSimulation = (simulationDeps: SimulationDeps) => {
             }
         };
     }, [
-        simulationDeps.running,
-        simulationDeps.canvasRef,
-        simulationDeps.sim,
-        simulationDeps.updateCanvas,
-        simulationDeps.sim.getParticles().length
+        running,
+        canvasRef,
+        simulation,
+        canvasDimensions,
+        renderOptions.showGrid,
+        renderOptions.showVectors,
+        updateTrigger,
+        simulation.getParticles().length
     ]);
 };
