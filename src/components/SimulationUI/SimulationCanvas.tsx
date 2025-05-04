@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState, useMemo } from "react";
 import { SimulationSpace } from "../../Physics/Simulation/SimulationSpace";
-import { useSimulation, SimulationRenderOptions } from "../../hooks/useSimulation";
+import { useSimulation } from "../../hooks/useSimulation";
 import { ChargedParticle } from "../../Physics/ChargedParticle";
 import { Vector2D } from "../../Physics/Vector2D";
 import { SimulationControls } from "./SimulationControls";
@@ -12,7 +12,6 @@ export default function SimulationCanvas() {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [simulation] = useState<SimulationSpace>(() => new SimulationSpace());
     const [running, setRunning] = useState<boolean>(false);
-    const [showGrid, setShowGrid] = useState<boolean>(true);
     const [showVectors, setShowVectors] = useState<boolean>(true);
     const [particleCount, setParticleCount] = useState<number>(0);
 
@@ -36,28 +35,18 @@ export default function SimulationCanvas() {
         simulation.setBoundaries(simulationBoundaries);
     }, [simulation, simulationBoundaries]);
 
-    // Memoize render options to prevent unnecessary re-renders
-    const renderOptions = useMemo<SimulationRenderOptions>(() => ({
-        showGrid,
-        showVectors
-    }), [showGrid, showVectors]);
-
     // Hook into simulation rendering
     useSimulation({
         running,
         canvasRef,
         simulation,
         canvasDimensions,
-        renderOptions,
+        showVectors,
     });
 
     // Event handlers using useCallback to prevent unnecessary re-renders
     const toggleRunning = useCallback(() => {
         setRunning((prev) => !prev);
-    }, []);
-
-    const toggleGrid = useCallback(() => {
-        setShowGrid((prev) => !prev);
     }, []);
 
     const toggleVectors = useCallback(() => {
@@ -128,8 +117,6 @@ export default function SimulationCanvas() {
                 onToggleRunning={toggleRunning}
                 onAddParticle={addRandomParticle}
                 onClearParticles={clearParticles}
-                showGrid={showGrid}
-                onToggleGrid={toggleGrid}
                 showVectors={showVectors}
                 onToggleVectors={toggleVectors}
             />

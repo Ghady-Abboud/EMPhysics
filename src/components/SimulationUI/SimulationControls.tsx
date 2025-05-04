@@ -5,10 +5,8 @@ interface SimulationControlsProps {
     onToggleRunning: () => void;
     onAddParticle: () => void;
     onClearParticles: () => void;
-    showGrid: boolean;
-    onToggleGrid: () => void;
-    showVectors: boolean;
     onToggleVectors: () => void;
+    showVectors: boolean;
 }
 
 export const SimulationControls: React.FC<SimulationControlsProps> = ({
@@ -16,10 +14,8 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
     onToggleRunning,
     onAddParticle,
     onClearParticles,
-    showGrid,
-    onToggleGrid,
+    onToggleVectors,
     showVectors,
-    onToggleVectors
 }) => {
     return (
         <div style={{
@@ -77,16 +73,6 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
             </button>
 
             <div style={{ marginTop: "10px" }}>
-                <label style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}>
-                    <input
-                        type="checkbox"
-                        checked={showGrid}
-                        onChange={onToggleGrid}
-                        style={{ marginRight: "5px" }}
-                    />
-                    Show Grid
-                </label>
-
                 <label style={{ display: "flex", alignItems: "center" }}>
                     <input
                         type="checkbox"

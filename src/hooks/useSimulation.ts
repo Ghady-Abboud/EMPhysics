@@ -3,11 +3,6 @@ import { SimulationSpace } from "../Physics/Simulation/SimulationSpace";
 import { drawGrid } from "../utils/Grid/drawGrid";
 import { renderFrame } from "../utils/Canvas/Render";
 
-export interface SimulationRenderOptions {
-    showGrid: boolean;
-    showVectors: boolean;
-}
-
 export interface SimulationViewProps {
     running: boolean;
     canvasRef: React.RefObject<HTMLCanvasElement | null>;
@@ -16,7 +11,7 @@ export interface SimulationViewProps {
         width: number;
         height: number;
     };
-    renderOptions: SimulationRenderOptions;
+    showVectors: boolean;
 }
 
 export const useSimulation = (props: SimulationViewProps) => {
@@ -25,7 +20,7 @@ export const useSimulation = (props: SimulationViewProps) => {
         canvasRef,
         simulation,
         canvasDimensions,
-        renderOptions,
+        showVectors
     } = props;
 
     useEffect(() => {
@@ -38,7 +33,6 @@ export const useSimulation = (props: SimulationViewProps) => {
         canvas.width = canvasDimensions.width;
         canvas.height = canvasDimensions.height;
 
-        if (!renderOptions.showGrid) return;
         drawGrid(ctx, canvas);
 
         let animationId: number | null = null;
@@ -46,13 +40,13 @@ export const useSimulation = (props: SimulationViewProps) => {
         if (running) {
             const animate = () => {
                 simulation.update(0.016); // ~60fps
-                renderFrame(ctx, canvas, simulation, renderOptions);
+                renderFrame(ctx, canvas, simulation, showVectors);
                 animationId = requestAnimationFrame(animate);
             };
             animate();
         } else {
             // Even when not running, render the current state
-            renderFrame(ctx, canvas, simulation, renderOptions);
+            renderFrame(ctx, canvas, simulation, showVectors);
         }
 
         return () => {
@@ -65,7 +59,7 @@ export const useSimulation = (props: SimulationViewProps) => {
         canvasRef,
         simulation,
         canvasDimensions,
-        renderOptions,
+        showVectors,
         simulation.getParticles().length
     ]);
 };
