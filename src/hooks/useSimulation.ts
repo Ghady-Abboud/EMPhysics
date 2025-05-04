@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { SimulationSpace } from "../Physics/Simulation/SimulationSpace";
 import { drawGrid } from "../utils/Grid/drawGrid";
-import { renderFrame, renderParticle } from "../utils/Canvas/Render";
+import { renderFrame } from "../utils/Canvas/Render";
 
 export interface SimulationRenderOptions {
     showGrid: boolean;
@@ -17,7 +17,6 @@ export interface SimulationViewProps {
         height: number;
     };
     renderOptions: SimulationRenderOptions;
-    updateTrigger: boolean;
 }
 
 export const useSimulation = (props: SimulationViewProps) => {
@@ -27,7 +26,6 @@ export const useSimulation = (props: SimulationViewProps) => {
         simulation,
         canvasDimensions,
         renderOptions,
-        updateTrigger
     } = props;
 
     useEffect(() => {
@@ -67,9 +65,7 @@ export const useSimulation = (props: SimulationViewProps) => {
         canvasRef,
         simulation,
         canvasDimensions,
-        renderOptions.showGrid,
-        renderOptions.showVectors,
-        updateTrigger,
+        renderOptions,
         simulation.getParticles().length
     ]);
 };

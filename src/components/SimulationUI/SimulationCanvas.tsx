@@ -12,7 +12,6 @@ export default function SimulationCanvas() {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [simulation] = useState<SimulationSpace>(() => new SimulationSpace());
     const [running, setRunning] = useState<boolean>(false);
-    const [updateTrigger, setUpdateTrigger] = useState<boolean>(false);
     const [showGrid, setShowGrid] = useState<boolean>(true);
     const [showVectors, setShowVectors] = useState<boolean>(true);
     const [particleCount, setParticleCount] = useState<number>(0);
@@ -50,7 +49,6 @@ export default function SimulationCanvas() {
         simulation,
         canvasDimensions,
         renderOptions,
-        updateTrigger
     });
 
     // Event handlers using useCallback to prevent unnecessary re-renders
@@ -94,7 +92,6 @@ export default function SimulationCanvas() {
 
         // Update particle count and trigger re-render
         setParticleCount(simulation.getParticles().length);
-        setUpdateTrigger(prev => !prev);
     }, [simulation, canvasDimensions.width, canvasDimensions.height]);
 
     const clearParticles = useCallback(() => {
@@ -102,9 +99,8 @@ export default function SimulationCanvas() {
         for (const p of particles) {
             simulation.removeParticle(p);
         }
-
+        setRunning(false);
         setParticleCount(0);
-        setUpdateTrigger(prev => !prev);
     }, [simulation]);
 
     return (

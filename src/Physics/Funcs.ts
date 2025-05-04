@@ -15,7 +15,7 @@ export function coulombLaw(p1: ChargedParticle, p2: ChargedParticle): number {
 export function calculateNetElectricForce(targetParticle: ChargedParticle, otherParticles: ChargedParticle[]): Vector2D {
     let netField = new Vector2D(0, 0);
     for (const particle of otherParticles) {
-        if (particle == targetParticle) continue;
+        if (particle === targetParticle) continue;
 
         const direction: Vector2D = targetParticle.getPosition().subtract(particle.getPosition());
         const distance: number = direction.magnitude();
@@ -31,7 +31,7 @@ export function calculateNetElectricForce(targetParticle: ChargedParticle, other
 export function calculateElectricPotential(targetParticle: ChargedParticle, otherParticles: ChargedParticle[]): number {
     let potential = 0;
     for (const particle of otherParticles) {
-        if (particle == targetParticle) continue;
+        if (particle === targetParticle) continue;
 
         const distance: number = particle.getPosition().subtract(targetParticle.getPosition()).magnitude();
         potential += (constants.k * particle.getCharge()) / distance;
