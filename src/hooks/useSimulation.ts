@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { SimulationSpace } from "../Physics/Simulation/SimulationSpace";
-import { drawGrid } from "../utils/Grid/drawGrid";
 import { renderFrame } from "../utils/Canvas/Render";
 
 export interface SimulationViewProps {
@@ -32,8 +31,6 @@ export const useSimulation = (props: SimulationViewProps) => {
 
         canvas.width = canvasDimensions.width;
         canvas.height = canvasDimensions.height;
-
-        drawGrid(ctx, canvas);
 
         let animationId: number | null = null;
 

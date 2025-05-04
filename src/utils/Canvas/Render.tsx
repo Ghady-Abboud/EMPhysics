@@ -1,9 +1,17 @@
-import { SimulationRenderOptions } from "../../hooks/useSimulation";
 import { ChargedParticle } from "../../Physics/ChargedParticle"
 import { SimulationSpace } from "../../Physics/Simulation/SimulationSpace";
-import { drawGrid } from "../Grid/drawGrid";
+import { drawGrid } from "./drawGrid";
 
-export const renderParticle = (p: ChargedParticle, ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, renderOptions: SimulationRenderOptions): void => {
+export const renderFrame = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, simulation: SimulationSpace, showVectors: boolean): void => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawGrid(ctx, canvas);
+    // Draw particles
+    for (const particle of simulation.getParticles()) {
+        renderParticle(particle, ctx, canvas, showVectors);
+    }
+}
+
+export const renderParticle = (p: ChargedParticle, ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, showVectors: boolean): void => {
     const pos = p.getPosition();
     const charge = p.getCharge();
     const mass = p.getMass();
@@ -28,7 +36,7 @@ export const renderParticle = (p: ChargedParticle, ctx: CanvasRenderingContext2D
     ctx.strokeStyle = "#333";
     ctx.stroke();
 
-    if (renderOptions.showVectors) {
+    if (showVectors) {
         const vel = p.getVelocity();
         const velMagnitude = Math.sqrt(vel.getX() ** 2 + vel.getY() ** 2);
 
@@ -61,15 +69,5 @@ export const renderParticle = (p: ChargedParticle, ctx: CanvasRenderingContext2D
             ctx.fillStyle = charge > 0 ? "rgb(200, 0, 0)" : "rgb(0, 0, 200)";
             ctx.fill();
         }
-    }
-}
-
-export const renderFrame = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, simulation: SimulationSpace, renderOptions: SimulationRenderOptions): void => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawGrid(ctx, canvas);
-
-    // Draw particles
-    for (const particle of simulation.getParticles()) {
-        renderParticle(particle, ctx, canvas, renderOptions);
     }
 }

@@ -1,4 +1,3 @@
-
 export const drawGrid = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void => {
     const gridSize = 50; // Distance between grid lines
     ctx.strokeStyle = "rgba(200, 200, 200, 0.3)";
