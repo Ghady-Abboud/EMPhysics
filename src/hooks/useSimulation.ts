@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { SimulationSpace } from "../Physics/Simulation/SimulationSpace";
 import { renderFrame } from "../utils/Canvas/Render";
 
@@ -22,6 +22,31 @@ export const useSimulation = (props: SimulationViewProps) => {
         showVectors
     } = props;
 
+    const animationIdRef = useRef<number | null>(null);
+    const particleCountRef = useRef<number>(simulation.getParticles().length);
+
+
+    // Physics simulation loop
+    useEffect(() => {
+        if (!running) { return };
+
+        const runSimulationLoop = () => {
+            simulation.update(0.016); // ~60fps
+            animationIdRef.current = requestAnimationFrame(runSimulationLoop);
+        };
+        runSimulationLoop();
+
+        return () => {
+            if (animationIdRef.current !== null) {
+                cancelAnimationFrame(animationIdRef.current);
+                animationIdRef.current = null;
+            }
+        };
+    }, [
+        running,
+        simulation
+    ]);
+
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -32,31 +57,38 @@ export const useSimulation = (props: SimulationViewProps) => {
         canvas.width = canvasDimensions.width;
         canvas.height = canvasDimensions.height;
 
-        let animationId: number | null = null;
+        renderFrame(ctx, canvas, simulation, showVectors);
 
         if (running) {
-            const animate = () => {
-                simulation.update(0.016); // ~60fps
-                renderFrame(ctx, canvas, simulation, showVectors);
-                animationId = requestAnimationFrame(animate);
+            const renderLoop = () => {
+                renderFrame(ctx, canvas, simulation, showVectors)
+                requestAnimationFrame(renderLoop);
             };
-            animate();
-        } else {
-            // Even when not running, render the current state
-            renderFrame(ctx, canvas, simulation, showVectors);
+
+            const renderId = requestAnimationFrame(renderLoop);
+            return () => cancelAnimationFrame(renderId);
         }
 
-        return () => {
-            if (animationId !== null) {
-                cancelAnimationFrame(animationId);
+        const particleCount = simulation.getParticles().length;
+        particleCountRef.current = particleCount;
+
+    }, [canvasRef, simulation, running, showVectors])
+
+    useEffect(() => {
+        if (running) return;
+
+        const checkParticleChangesOnPause = () => {
+            const currentCount = simulation.getParticles().length;
+            if (currentCount !== particleCountRef.current) {
+                particleCountRef.current = currentCount;
             }
-        };
-    }, [
-        running,
-        canvasRef,
-        simulation,
-        canvasDimensions,
-        showVectors,
-        simulation.getParticles().length
-    ]);
+        }
+
+        renderFrame(canvasRef.current?.getContext("2d")!, canvasRef.current!, simulation, showVectors)
+
+        const intervalId = setInterval(checkParticleChangesOnPause, 1000 / 60);
+        return () => {
+            clearInterval(intervalId);
+        }
+    }, [running, simulation, canvasRef, showVectors])
 };
