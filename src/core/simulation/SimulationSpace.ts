@@ -1,5 +1,5 @@
-import { ChargedParticle } from "../ChargedParticle";
-import { calculateNetElectricForce } from "../Funcs";
+import { ChargedParticle } from "../physics/ChargedParticle";
+import { calculateNetElectricForce } from "../physics/calculations/force";
 import { BoundaryManager, Boundaries } from "./BoundaryManager";
 
 export class SimulationSpace {

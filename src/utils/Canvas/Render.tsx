@@ -1,5 +1,5 @@
-import { ChargedParticle } from "../../Physics/ChargedParticle"
-import { SimulationSpace } from "../../Physics/Simulation/SimulationSpace";
+import { ChargedParticle } from "../../core/physics/ChargedParticle"
+import { SimulationSpace } from "../../core/simulation/SimulationSpace";
 import { drawGrid } from "./drawGrid";
 
 export const renderFrame = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, simulation: SimulationSpace, showVectors: boolean): void => {
@@ -16,7 +16,6 @@ export const renderParticle = (p: ChargedParticle, ctx: CanvasRenderingContext2D
     const charge = p.getCharge();
     const mass = p.getMass();
 
-    // Calculate radius based on mass (min 5px)
     const radius = 5 + mass * 2;
 
     // Draw particle
@@ -27,11 +26,9 @@ export const renderParticle = (p: ChargedParticle, ctx: CanvasRenderingContext2D
         radius, 0, Math.PI * 2
     );
 
-    // Fill based on charge
     ctx.fillStyle = charge > 0 ? "rgba(255, 50, 50, 0.8)" : "rgba(50, 50, 255, 0.8)";
     ctx.fill();
 
-    // Add border
     ctx.lineWidth = 1;
     ctx.strokeStyle = "#333";
     ctx.stroke();
@@ -41,7 +38,7 @@ export const renderParticle = (p: ChargedParticle, ctx: CanvasRenderingContext2D
         const velMagnitude = Math.sqrt(vel.getX() ** 2 + vel.getY() ** 2);
 
         if (velMagnitude > 0) {
-            const scale = 5; // Scale factor for velocity vectors
+            const scale = 5;
             const arrowX = pos.getX() + canvas.width / 2 + vel.getX() * scale;
             const arrowY = pos.getY() + canvas.height / 2 + vel.getY() * scale;
 
@@ -52,7 +49,6 @@ export const renderParticle = (p: ChargedParticle, ctx: CanvasRenderingContext2D
             ctx.lineWidth = 2;
             ctx.stroke();
 
-            // Arrow head
             const headSize = 5;
             const angle = Math.atan2(vel.getY(), vel.getX());
             ctx.beginPath();

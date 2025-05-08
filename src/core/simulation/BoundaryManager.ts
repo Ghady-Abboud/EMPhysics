@@ -1,5 +1,5 @@
-import { ChargedParticle } from "../ChargedParticle";
-import { Vector2D } from "../Vector2D";
+import { ChargedParticle } from "../physics/ChargedParticle";
+import { Vector2D } from "../physics/Vector2D";
 
 
 export interface Boundaries {

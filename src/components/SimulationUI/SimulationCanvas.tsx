@@ -1,11 +1,11 @@
 import { useCallback, useRef, useState, useMemo } from "react";
-import { SimulationSpace } from "../../Physics/Simulation/SimulationSpace";
+import { SimulationSpace } from "../../core/simulation/SimulationSpace";
 import { useSimulation } from "../../hooks/useSimulation";
-import { ChargedParticle } from "../../Physics/ChargedParticle";
-import { Vector2D } from "../../Physics/Vector2D";
+import { ChargedParticle } from "../../core/physics/ChargedParticle";
+import { Vector2D } from "../../core/physics/Vector2D";
 import { SimulationControls } from "./SimulationControls";
 import { SimulationStats } from "./SimulationStats";
-import { Boundaries } from "../../Physics/Simulation/BoundaryManager";
+import { Boundaries } from "../../core/simulation/BoundaryManager";
 
 export default function SimulationCanvas() {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);

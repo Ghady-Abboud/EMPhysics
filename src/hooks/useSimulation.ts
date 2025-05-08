@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { SimulationSpace } from "../Physics/Simulation/SimulationSpace";
+import { SimulationSpace } from "../core/simulation/SimulationSpace";
 import { renderFrame } from "../utils/Canvas/Render";
 
 export interface SimulationViewProps {

@@ -1,0 +1,33 @@
+src/
+├── core/
+│   ├── physics/
+│   │   ├── ChargedParticle.ts
+│   │   ├── Vector2D.ts
+│   │   ├── constants.ts        # Move physics constants here
+│   │   └── calculations/
+│   │       ├── coulomb.ts      # Coulomb's law calculations
+│   │       ├── electricField.ts # Electric field calculations
+│   │       └── potential.ts    # Electric potential calculations
+│   │
+│   └── simulation/
+│       ├── SimulationSpace.ts
+│       └── BoundaryManager.ts
+│
+├── ui/
+│   ├── components/
+│   │   ├── SimulationCanvas.tsx
+│   │   ├── SimulationControls.tsx
+│   │   └── SimulationStats.tsx
+│   │
+│   └── rendering/
+│       ├── Renderer.ts         # Main rendering logic
+│       ├── ParticleRenderer.ts # Particle-specific rendering
+│       └── GridRenderer.ts     # Grid rendering
+│
+├── hooks/
+│   ├── useSimulation.ts
+│   └── useRenderOptions.ts
+│
+└── utils/
+    └── types/
+        └── index.ts           # Common type definitions
