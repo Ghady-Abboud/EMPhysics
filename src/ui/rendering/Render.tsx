@@ -15,6 +15,7 @@ export const renderParticle = (p: ChargedParticle, ctx: CanvasRenderingContext2D
     const pos = p.getPosition();
     const charge = p.getCharge();
     const mass = p.getMass();
+    const electricFieldVector = p.getElectricField();
 
     const radius = 5 + mass * 2;
 

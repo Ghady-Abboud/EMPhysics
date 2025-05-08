@@ -54,8 +54,8 @@ export class ChargedParticle {
     public updateVelocity(acceleration: Vector2D, deltaTime: number): void {
         this.setVelocity(this.velocity.add(acceleration.scalar_multiply(deltaTime)));
     }
-    public getElectricField(otherParticles: ChargedParticle[]) {
-        return calculateNetElectricField(this.position, otherParticles);
+    public getElectricField() {
+        return this.electricField;
     }
 
     public setElectricField(electricField: Vector2D): void {
