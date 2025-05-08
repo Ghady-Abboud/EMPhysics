@@ -1,6 +1,6 @@
 import { ChargedParticle } from "../../core/physics/ChargedParticle"
 import { SimulationSpace } from "../../core/simulation/SimulationSpace";
-import { drawGrid } from "./drawGrid";
+import { drawGrid } from "./Grid";
 
 export const renderFrame = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, simulation: SimulationSpace, showVectors: boolean): void => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);

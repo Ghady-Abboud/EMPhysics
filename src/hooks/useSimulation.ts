@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { SimulationSpace } from "../core/simulation/SimulationSpace";
-import { renderFrame } from "../utils/Canvas/Render";
+import { renderFrame } from "../ui/rendering/Render";
 
 export interface SimulationViewProps {
     running: boolean;
