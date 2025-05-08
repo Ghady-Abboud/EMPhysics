@@ -1,4 +1,4 @@
-import SimulationCanvas from "./ui/components/SimulationCanvas";
+import SimulationCanvas from "./ui/components/simulation/canvas";
 
 export function App() {
   return (
