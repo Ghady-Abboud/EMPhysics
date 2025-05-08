@@ -1,16 +1,19 @@
 import { Vector2D } from "./Vector2D";
+import { calculateNetElectricField } from "./calculations/field";
 
 export class ChargedParticle {
     private position: Vector2D;
     private velocity: Vector2D;
     private charge: number;
     private mass: number;
+    private electricField: Vector2D;
 
     constructor(position: Vector2D, velocity: Vector2D, mass: number, charge: number) {
         this.position = position;
         this.velocity = velocity;
         this.charge = charge;
         this.mass = mass;
+        this.electricField = new Vector2D(0, 0);
     }
 
     public getPosition(): Vector2D {
@@ -50,5 +53,12 @@ export class ChargedParticle {
     }
     public updateVelocity(acceleration: Vector2D, deltaTime: number): void {
         this.setVelocity(this.velocity.add(acceleration.scalar_multiply(deltaTime)));
+    }
+    public getElectricField(otherParticles: ChargedParticle[]) {
+        return calculateNetElectricField(this.position, otherParticles);
+    }
+
+    public setElectricField(electricField: Vector2D): void {
+        this.electricField = electricField;
     }
 }

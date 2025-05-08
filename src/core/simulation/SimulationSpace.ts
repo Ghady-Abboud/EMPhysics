@@ -1,4 +1,5 @@
 import { ChargedParticle } from "../physics/ChargedParticle";
+import { calculateNetElectricField } from "../physics/calculations/field";
 import { calculateNetElectricForce } from "../physics/calculations/force";
 import { BoundaryManager, Boundaries } from "./BoundaryManager";
 
@@ -39,8 +40,10 @@ export class SimulationSpace {
 
     public update(deltaTime: number): void {
         for (const particle of this.particles) {
-            const netForce = calculateNetElectricForce(particle, this.particles);
-            const acceleration = netForce.scalar_multiply(1 / particle.getMass());
+            const netElectricForce = calculateNetElectricForce(particle, this.particles);
+            const netElectricFieldVector = calculateNetElectricField(particle.getPosition(), this.particles);
+            particle.setElectricField(netElectricFieldVector);
+            const acceleration = netElectricForce.scalar_multiply(particle.getCharge() / particle.getMass());
             particle.updateVelocity(acceleration, deltaTime);
         }
 
