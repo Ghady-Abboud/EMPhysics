@@ -8,20 +8,17 @@ import { SimulationStats } from "./SimulationStats";
 import { Boundaries } from "../../Physics/Simulation/BoundaryManager";
 
 export default function SimulationCanvas() {
-    // Initialize state and refs
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [simulation] = useState<SimulationSpace>(() => new SimulationSpace());
     const [running, setRunning] = useState<boolean>(false);
     const [showVectors, setShowVectors] = useState<boolean>(true);
     const [particleCount, setParticleCount] = useState<number>(0);
 
-    // Memoize canvas dimensions to prevent unnecessary recalculations
     const canvasDimensions = useMemo(() => ({
         width: window.innerWidth * 0.8,
         height: window.innerHeight * 0.8,
     }), []);
 
-    // Memoize simulation boundaries
     const simulationBoundaries = useMemo<Boundaries>(() => ({
         left: -canvasDimensions.width / 2,
         right: canvasDimensions.width / 2,
@@ -30,12 +27,10 @@ export default function SimulationCanvas() {
         elasticity: 0.9,
     }), [canvasDimensions.width, canvasDimensions.height]);
 
-    // Set boundaries when they change
     useMemo(() => {
         simulation.setBoundaries(simulationBoundaries);
     }, [simulation, simulationBoundaries]);
 
-    // Hook into simulation rendering
     useSimulation({
         running,
         canvasRef,
@@ -44,7 +39,6 @@ export default function SimulationCanvas() {
         showVectors,
     });
 
-    // Event handlers using useCallback to prevent unnecessary re-renders
     const toggleRunning = useCallback(() => {
         setRunning((prev) => !prev);
     }, []);
@@ -54,22 +48,16 @@ export default function SimulationCanvas() {
     }, []);
 
     const addRandomParticle = useCallback(() => {
-        // Calculate appropriate position within 80% of canvas size
-        // to avoid particles too close to the edges
         const posX = (Math.random() * 0.8 - 0.4) * canvasDimensions.width;
         const posY = (Math.random() * 0.8 - 0.4) * canvasDimensions.height;
 
-        // Random velocity between -40 and 40 in both directions
         const velX = (Math.random() * 80 - 40);
         const velY = (Math.random() * 80 - 40);
 
-        // Random mass between 0.5 and 3
         const mass = 0.5 + Math.random() * 2.5;
 
-        // Random charge - 50% chance of positive or negative
         const charge = (Math.random() > 0.5 ? 1 : -1) * (1e-6 + Math.random() * 9e-6);
 
-        // Create and add the particle
         simulation.addParticle(
             new ChargedParticle(
                 new Vector2D(posX, posY),
@@ -79,7 +67,6 @@ export default function SimulationCanvas() {
             )
         );
 
-        // Update particle count and trigger re-render
         setParticleCount(simulation.getParticles().length);
     }, [simulation, canvasDimensions.width, canvasDimensions.height]);
 
@@ -94,7 +81,6 @@ export default function SimulationCanvas() {
 
     return (
         <div>
-            {/* Main canvas */}
             <canvas
                 ref={canvasRef}
                 style={{
@@ -105,13 +91,11 @@ export default function SimulationCanvas() {
                 }}
             />
 
-            {/* Stats panel */}
             <SimulationStats
                 particleCount={particleCount}
                 isRunning={running}
             />
 
-            {/* Controls panel */}
             <SimulationControls
                 running={running}
                 onToggleRunning={toggleRunning}

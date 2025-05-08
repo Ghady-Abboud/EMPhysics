@@ -58,7 +58,6 @@ export class BoundaryManager {
         let vy = vel.getY();
         let changed: Boolean = false;
 
-        // Check boundaries
         if (x < left) {
             x = left;
             vx = -vx * elasticity!;

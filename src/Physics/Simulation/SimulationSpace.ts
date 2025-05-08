@@ -7,7 +7,6 @@ export class SimulationSpace {
     private boundaryManager: BoundaryManager | null = null;
 
     constructor() {
-        // Initialize with default boundaries
         this.boundaryManager = null;
     }
 
@@ -39,19 +38,16 @@ export class SimulationSpace {
     }
 
     public update(deltaTime: number): void {
-        // First, calculate all forces and update velocities
         for (const particle of this.particles) {
             const netForce = calculateNetElectricForce(particle, this.particles);
             const acceleration = netForce.scalar_multiply(1 / particle.getMass());
             particle.updateVelocity(acceleration, deltaTime);
         }
 
-        // Then, update all positions
         for (const particle of this.particles) {
             particle.updatePosition(deltaTime);
         }
 
-        // Finally, enforce boundaries if they exist
         if (this.boundaryManager) {
             this.boundaryManager.enforceBoundaries(this.particles);
         }
