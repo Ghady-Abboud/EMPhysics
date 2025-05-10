@@ -1,11 +1,14 @@
 import { ChargedParticle } from "../../core/physics/ChargedParticle"
 import { SimulationSpace } from "../../core/simulation/SimulationSpace";
 import { drawGrid } from "./Grid";
+import { drawElectricField } from "./FieldLines";
 
 export const renderFrame = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, simulation: SimulationSpace, showVectors: boolean): void => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawGrid(ctx, canvas);
-    // Draw particles
+
+    drawElectricField(ctx, canvas, simulation);
+
     for (const particle of simulation.getParticles()) {
         renderParticle(particle, ctx, canvas, showVectors);
     }
@@ -15,7 +18,6 @@ export const renderParticle = (p: ChargedParticle, ctx: CanvasRenderingContext2D
     const pos = p.getPosition();
     const charge = p.getCharge();
     const mass = p.getMass();
-    const electricFieldVector = p.getElectricField();
 
     const radius = 5 + mass * 2;
 
